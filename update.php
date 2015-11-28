@@ -1,16 +1,14 @@
 <?php
 new SteamTracker(Count($argv) === 2 ? $argv[1] : '');
-class SteamTracker
-{
+
+class SteamTracker {
 	private $AppStart;
 	private $CurrentTime;
 	private $UseCache = true;
-	private $ExtractClientArchives = false;
 	private $Requests = [];
 	private $URLsToFetch = [];
-	private $ClientArchives = ['resources_all.zip', 'remoteui_all.zip', 'public_all.zip', 'strings_all.zip', 'tenfoot_all.zip', 'tenfoot_images_all.zip', 'tenfoot_misc_all.zip', 'steam_osx.zip', 'bins_osx.zip', 'bins_client_osx.zip', 'steamcmd_bins_osx.zip', ];
 	private $Options = Array(
-	CURLOPT_USERAGENT => 'SteamDB',
+	CURLOPT_USERAGENT => 'SuitedButler',
 	CURLOPT_ENCODING => 'gzip',
 	CURLOPT_HEADER => 1,
 	CURLOPT_AUTOREFERER => 0,
@@ -23,9 +21,8 @@ class SteamTracker
 	CURLOPT_FORBID_REUSE => 1,
 	CURLOPT_FRESH_CONNECT => 1
 );
-public
 
-function __construct($Option)
+public function __construct($Option)
 {
 	$this->AppStart = MicroTime(true);
 	if ($Option === 'force') {
@@ -65,8 +62,7 @@ while (!Empty($this->URLsToFetch) && $Tries-- > 0);
 $this->Log('{lightblue}Done');
 }
 
-private function GenerateURL($URL)
-{
+private function GenerateURL($URL) {
 	return Str_Replace(Array(
 	'__TIME__'
 	) , Array(
@@ -74,8 +70,7 @@ private function GenerateURL($URL)
 	) , $URL);
 }
 
-private function HandleResponse($File, $Data)
-{
+private function HandleResponse($File, $Data) {
 	if (SubStr($File, -4) === '.css' || SubStr($File, -3) === '.js') {
 		$Data = preg_replace('/[&\?]v=[a-zA-Z0-9\.\-\_]{3,}/', '?v=valveisgoodatcaching', $Data);
 	}
@@ -95,8 +90,7 @@ private function HandleResponse($File, $Data)
 	return true;
 }
 
-private function Fetch($URLs, $Tries)
-{
+private function Fetch($URLs, $Tries) {
 	$this->Requests = Array();
 	$Master = cURL_Multi_Init();
 	$WindowSize = 10;
